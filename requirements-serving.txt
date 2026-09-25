@@ -1,0 +1,4 @@
+# Install in a separate Linux GPU environment; vLLM selects compatible torch.
+vllm
+huggingface_hub
+transformers

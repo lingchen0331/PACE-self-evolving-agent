@@ -1,0 +1,62 @@
+{
+  "gpqa_diamond.csv": {
+    "sha256": "41d1213cd7a4998605a26c2798500652572007161b3a92817ba46b35befcd305",
+    "bytes": 1373492
+  },
+  "ifeval/ifeval_input_data_test.jsonl": {
+    "sha256": "08a8ac8faffb365df0602445671d83b7869be3bdb051876307a8eb981dfb06a9",
+    "bytes": 55025
+  },
+  "ifeval/ifeval_input_data_train.jsonl": {
+    "sha256": "a9ee0941d6933c7a0a7136cf83ad245b95cf1dbd13ea17a53cf63247119404a3",
+    "bytes": 152401
+  },
+  "mgsm/mgsm_bn.tsv": {
+    "sha256": "6b00bc7cc635547e866989284afa924d789b5affa2eb8de623c385dd943ad977",
+    "bytes": 156684
+  },
+  "mgsm/mgsm_de.tsv": {
+    "sha256": "4dfea30fede44b813e2e496f5f0534049e83c7cc8aed6e00600b30ec62053626",
+    "bytes": 69640
+  },
+  "mgsm/mgsm_en.tsv": {
+    "sha256": "50021d0f28cc957edcb44e7806425b1c7fbd648ddcb9e0a8ec689d10e57d40fa",
+    "bytes": 61299
+  },
+  "mgsm/mgsm_es.tsv": {
+    "sha256": "5bd27ebdf00140cec845c5298dc17715f5cd57d8edda6df1976db40bf3f0750a",
+    "bytes": 66896
+  },
+  "mgsm/mgsm_fr.tsv": {
+    "sha256": "36207c1c03fd7cd3ea491441eb755408199f94e4a647851df531bbaedc99d606",
+    "bytes": 69141
+  },
+  "mgsm/mgsm_ja.tsv": {
+    "sha256": "59a2b50debe77981fd784cb3b2bef1505e3abf2a37116dc9d7a366ab029b4637",
+    "bytes": 81043
+  },
+  "mgsm/mgsm_ru.tsv": {
+    "sha256": "6bd30fd2e80c5bac23f566fb4ae0e6a55a19578401fbf9a01fb21beb3645fef8",
+    "bytes": 110953
+  },
+  "mgsm/mgsm_sw.tsv": {
+    "sha256": "2bac828d77229e65d7c7197b1ad4a2cb5b1fe99b163f2cbdd66501de6a2115c4",
+    "bytes": 67456
+  },
+  "mgsm/mgsm_te.tsv": {
+    "sha256": "dd6b1452c244bb2e4ba254c01ea84137f80c1cefc57d69c23b0ed88b9c0f36b7",
+    "bytes": 176547
+  },
+  "mgsm/mgsm_th.tsv": {
+    "sha256": "f3932dc5ad8e9d0ea82b017adc1e1461dd647af861e7166d6741986602a0cfd6",
+    "bytes": 151921
+  },
+  "mgsm/mgsm_zh.tsv": {
+    "sha256": "b2fa63151022370a0de1f4211c8c284eae74b0f5a3b003b1d5982c0d4a73f661",
+    "bytes": 57838
+  },
+  "mmlu.csv": {
+    "sha256": "15b6785d49e0012602e089558a7a0dfb916baf97e9295aa25b48062f13c6afbb",
+    "bytes": 6667575
+  }
+}

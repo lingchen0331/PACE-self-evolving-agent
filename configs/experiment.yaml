@@ -1,42 +1,36 @@
-# Switch dataset and hyperparameters here.
-# task: mmlu | mgsm
-task: ifeval
+# Runnable single-server example. Run commands from the repository root.
+# Supported tasks: mmlu | mgsm | ifeval
+# These are example settings, not a complete paper reproduction manifest.
+task: mmlu
 runs: 1
-
 goal_prompt_path: src/goal_prompt.md
-key_path: src/key.env
-
-# Outer loop limit
 max_outer_evolve_steps: 20
-
-# For vLLM backends without tool parser enabled
 disable_tool_calls: false
 
 model:
-  # base_url: http://127.0.0.1:8000/v1
-  # Add extra base_urls to round-robin LLM calls across multiple vLLM servers.
-  base_urls:
-    - http://127.0.0.1:8000/v1
-    - http://127.0.0.1:8001/v1
-  api_key: EMPTY
-  infer_model: ministral-14b-local
-  optimizer_model: ministral-14b-local
-  outer_loop_model: ministral-14b-local
+  base_url: http://127.0.0.1:8000/v1
+  # For multiple servers, replace base_url with a base_urls list.
+  # Supply credentials through OPENAI_API_KEY; local vLLM defaults to EMPTY.
+  infer_model: qwen3-local
+  optimizer_model: qwen3-local
+  outer_loop_model: qwen3-local
 
 inner_loop:
   iterations: 4
   train_size: 24
   valid_size: 16
   candidates_per_iter: 8
+  seed: 7
+  rotate_seed_each_call: true
 
 evolution_credit:
-  # Trigger outer structural exploration only when estimated Delta_U_P < epsilon.
   prompt_saturation_epsilon: 0.01
-  # In fallback mode (no native tools), enforce at least this many prompt-update rounds.
   fallback_min_prompt_update_rounds: 2
+  ab_gate_delta_threshold: 0.02
 
 token_management:
-  # Maximum request context sent to the model.
-  max_input_tokens: 128000
-  # Reserve tokens for model output.
+  max_input_tokens: 28672
   max_output_tokens: 2000
+
+concurrency:
+  max_workers: 16

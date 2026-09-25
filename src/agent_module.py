@@ -27,7 +27,6 @@ import logic
 import task_mmlu as task_mmlu
 import task_mgsm as task_mgsm
 import task_ifeval as task_ifeval
-import task_drop as task_drop
 
 
 action_counter = collections.defaultdict(int)
@@ -37,7 +36,6 @@ TASK_MODULES = {
     "mmlu": task_mmlu,
     "mgsm": task_mgsm,
     "ifeval": task_ifeval,
-    "drop": task_drop,
 }
 
 
@@ -590,8 +588,6 @@ def solver(agent, task: str):
     output_coercer = getattr(agent.task_module, "_coerce_solver_output", None)
     if getattr(agent, "task_name", None) == "mmlu" and callable(output_coercer):
         return output_coercer(task, return_dict)
-    if getattr(agent, "task_name", None) == "drop" and callable(output_coercer):
-        return output_coercer(task, return_dict)
 
     if not isinstance(return_dict, dict):
         return_dict = {"answer": str(return_dict or "")}
@@ -609,6 +605,7 @@ def action_evaluate_on_task(agent: AgentBase, task, solver):
     Evaluate the current solver on the goal task samples and return evaluation feedback.
     """
     global best_eval_acc
+    os.makedirs("results", exist_ok=True)
     selected_eval_examples = agent.selected_examples.get("evaluate", {}).get("examples")
     feedback, acc = task.evaluate(solver, examples_override=selected_eval_examples,
                                    max_workers=getattr(agent, "max_workers", 48))
@@ -745,12 +742,6 @@ def _load_example_pool(agent: AgentBase, split: str):
             return list(agent.task_module._load_ifeval_examples("train"))
         if split in {"test", "evaluate"}:
             return list(agent.task_module._load_ifeval_examples("test"))
-    elif agent.task_name == "drop":
-        examples = list(agent.task_module._load_drop_examples())
-        if split in {"train", "valid", "in_domain"}:
-            return examples[:128]
-        if split in {"test", "evaluate"}:
-            return examples[128:928]
     raise ValueError(f"Unsupported split `{split}` for task `{agent.task_name}`.")
 
 
@@ -764,15 +755,6 @@ def _example_group_key(agent: AgentBase, example: typing.Dict[str, typing.Any]) 
         if instruction_ids:
             return str(instruction_ids[0])
         return str(example.get("key", "unknown"))
-    if agent.task_name == "drop":
-        # Group by passage length bucket as a rough proxy for question type
-        context = str(example.get("context", ""))
-        if len(context) < 500:
-            return "short_passage"
-        elif len(context) < 1000:
-            return "medium_passage"
-        else:
-            return "long_passage"
     return "default"
 
 
@@ -794,11 +776,6 @@ def _example_preview(agent: AgentBase, example: typing.Dict[str, typing.Any]) ->
             "key": example.get("key"),
             "instruction_id_list": list(example.get("instruction_id_list", []))[:4],
             "prompt": str(example.get("prompt", ""))[:160],
-        }
-    if agent.task_name == "drop":
-        return {
-            "input": str(example.get("inputs", ""))[:160],
-            "targets": example.get("targets"),
         }
     return {"preview": str(example)[:160]}
 
@@ -1021,18 +998,6 @@ def _fast_solver_eval(
                     f"Prompt: {prompt[:200]}...\n"
                     f"Response: {response_text[:300]}...\n"
                     f"Strict: {strict}  Loose: {loose:.2f}  Failed: {failed_ids}\n"
-                )
-            elif task_name == "drop":
-                prompt = example["inputs"]
-                res = solver_fn(prompt)
-                predicted = str(res.get("answer", ""))
-                gold_answers = example["targets"]
-                em_score, f1_score = task_module.drop_metric(predicted, gold_answers)
-                is_correct = em_score >= 1.0
-                info_list.append(
-                    f"Valid Sample {idx}:\n{prompt[:200]}...\n"
-                    f"Model Answer: {predicted}\nCorrect Answers: {gold_answers}\n"
-                    f"EM: {em_score}  F1: {f1_score}  Is Correct: {is_correct}\n"
                 )
             else:
                 raise ValueError(f"Fast comparison is not implemented for task `{task_name}`.")
@@ -1430,7 +1395,7 @@ class Agent(AgentBase):
         agent,
         api_key=None,
         goal_prompt_path='src/goal_prompt.md',
-        key_path='src/key.env',
+        key_path=None,
         task_name: str = "mmlu",
         max_outer_evolve_steps: int = 10,
         inner_loop_defaults: typing.Optional[typing.Dict[str, int]] = None,
@@ -1442,7 +1407,8 @@ class Agent(AgentBase):
         max_workers: int = 48,
     ):
         # Load configurations
-        agent.goal_prompt = open(goal_prompt_path, 'r').read()
+        with open(goal_prompt_path, encoding='utf-8') as prompt_file:
+            agent.goal_prompt = prompt_file.read()
         task_name = str(task_name).lower().strip()
         if task_name not in TASK_MODULES:
             raise ValueError(f"Unknown task_name={task_name}. Supported tasks: {sorted(TASK_MODULES.keys())}")
@@ -1481,9 +1447,10 @@ class Agent(AgentBase):
             )
         if api_key is None:
             api_key = os.getenv("OPENAI_API_KEY")
-            if api_key is None and os.path.exists(key_path):
-                api_key = open(key_path, 'r').read().strip()
-        if api_key is None:
+            if api_key is None and key_path and os.path.exists(key_path):
+                with open(key_path, encoding='utf-8') as key_file:
+                    api_key = key_file.read().strip()
+        if not api_key:
             api_key = "EMPTY"
         base_url = os.getenv("OPENAI_BASE_URL") or os.getenv("VLLM_BASE_URL") or "http://127.0.0.1:8000/v1"
         openai.api_key = api_key

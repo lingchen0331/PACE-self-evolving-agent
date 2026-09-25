@@ -529,12 +529,13 @@ def real_evaluate(solver):
     acc = sum(acc_list) / len(acc_list)
     interval = bootstrap_confidence_interval(acc_list)
     if acc > last_test_acc:
-        open(f"results/mgsm_{round(acc, 4)}.txt", "w").writelines([interval] + info_list)
+        with open(f"results/mgsm_{round(acc, 4)}.txt", "w", encoding="utf-8") as result_file:
+            result_file.writelines([interval] + info_list)
     return acc
 
 
 class MGSM_Task:
-    def evaluate(self, solver, examples_override=None):
+    def evaluate(self, solver, examples_override=None, max_workers=48):
         if examples_override is not None:
             examples = list(examples_override)
         else:
@@ -547,7 +548,7 @@ class MGSM_Task:
             examples = examples[:50]
         questions = [example["inputs"] for example in examples]
         answers = [example["targets"] for example in examples]
-        max_workers = min(len(examples), 48)
+        max_workers = min(len(examples), max_workers)
 
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             results = list(tqdm(executor.map(solver, questions), total=len(questions)))

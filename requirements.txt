@@ -1,7 +1,6 @@
-numpy
-tqdm
-pandas
-openai==1.2.0
-pyyaml
-scipy
-vllm
+# Client/evaluation environment; no GPU runtime required.
+numpy>=1.24,<3
+tqdm>=4.66,<5
+pandas>=2,<3
+openai>=1.55.3,<3
+PyYAML>=6,<7

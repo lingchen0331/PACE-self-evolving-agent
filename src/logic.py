@@ -77,8 +77,8 @@ def merge_and_clean(dump_folder='../dumped_agent'):
     if os.path.exists(task_folder):
         merge_py_files(task_folder, exclude_files=[], output_file='task.py')
     
-    # Copy key.env, goal_prompt.md, and main.py to the dump_folder
-    for file_name in ['key.env', 'goal_prompt.md', 'main.py']:
+    # Copy support files, never credentials, into the logic snapshot.
+    for file_name in ['goal_prompt.md', 'main.py']:
         source_file = os.path.join(os.getcwd(), file_name)
         if os.path.exists(source_file):
             shutil.copy(source_file, dump_folder)

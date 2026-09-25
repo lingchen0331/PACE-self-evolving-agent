@@ -6,12 +6,12 @@ DEFAULT_RUN_CONFIG: Dict[str, Any] = {
     "task": "mmlu",
     "runs": 1,
     "goal_prompt_path": "src/goal_prompt.md",
-    "key_path": "src/key.env",
+    "key_path": None,
     "max_outer_evolve_steps": 10,
     "disable_tool_calls": True,
     "model": {
         "base_url": "http://127.0.0.1:8000/v1",
-        "api_key": "EMPTY",
+        "api_key": None,
         "infer_model": "qwen3-local",
         "optimizer_model": "qwen3-local",
         "outer_loop_model": "qwen3-local",
@@ -83,7 +83,7 @@ def apply_run_config_to_env(config: Dict[str, Any]) -> None:
         os.environ["OPENAI_BASE_URLS"] = ",".join(str(u) for u in base_urls)
     elif model_cfg.get("base_url"):
         os.environ.pop("OPENAI_BASE_URLS", None)
-    if model_cfg.get("api_key"):
+    if model_cfg.get("api_key") and not os.environ.get("OPENAI_API_KEY"):
         os.environ["OPENAI_API_KEY"] = str(model_cfg["api_key"])
     if model_cfg.get("infer_model"):
         os.environ["AGENT_MODEL_NAME"] = str(model_cfg["infer_model"])
@@ -100,3 +100,22 @@ def apply_run_config_to_env(config: Dict[str, Any]) -> None:
         os.environ["MAX_INPUT_TOKENS"] = str(token_cfg["max_input_tokens"])
     if token_cfg.get("max_output_tokens") is not None:
         os.environ["MAX_OUTPUT_TOKENS"] = str(token_cfg["max_output_tokens"])
+
+
+def redacted_config(config):
+    """Return a logging-safe copy without credential fields or URL credentials."""
+    from urllib.parse import urlsplit, urlunsplit
+
+    if isinstance(config, dict):
+        return {
+            key: "[REDACTED]" if any(part in key.lower() for part in
+                ("api_key", "token", "password", "secret")) and not isinstance(value, (dict, int, float))
+            else redacted_config(value)
+            for key, value in config.items()
+        }
+    if isinstance(config, list):
+        return [redacted_config(value) for value in config]
+    if isinstance(config, str) and "://" in config:
+        url = urlsplit(config)
+        return urlunsplit((url.scheme, url.netloc.rsplit("@", 1)[-1], url.path, "", ""))
+    return config
