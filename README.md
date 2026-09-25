@@ -8,18 +8,6 @@ Research code for **PACE (Prompt And Control Logic Evolution)**. PACE adapts the
 **Paper:** [PACE: Two-Timescale Self-Evolution for Small Language Model Agents](https://arxiv.org/abs/2605.23019)
 Chen Ling, Pei Chen, Albert Guan, Jiaming Qu, Shayan Ali Akbar, Madhu Gopinathan, and Erwin Cornejo.
 
-## What is included
-
-| Benchmark | PACE runner |
-| --- | --- |
-| MMLU | Included (`task: mmlu`) |
-| MGSM | Included (`task: mgsm`) |
-| IFEval | Included (`task: ifeval`), with a custom heuristic scorer |
-| HotpotQA | Not included |
-| τ-bench | Not included |
-
-This checkout is a **partial research release** focused on PACE; baseline and comparison-method implementations are intentionally excluded. The paper studies MMLU, MGSM, HotpotQA, and IFEval, plus a τ-bench case study. The available code does not yet reproduce every paper experiment. See [reproducibility notes](docs/reproducibility.md) for scorer differences, experiment configuration coverage, and evaluation behavior. The legacy GPQA module is not registered with the runner.
-
 ## Quick start
 
 Run commands from the repository root. Use **Python 3.10 or newer** for the client (the setup helper uses Python 3.12). Model serving needs a separate compatible GPU environment; the supplied serving scripts target Linux with NVIDIA GPUs. An existing OpenAI-compatible inference endpoint also works.
