@@ -1,31 +1,11 @@
 #!/usr/bin/env bash
-set -e  # Exit on error
-
-echo "🔹 Checking for uv..."
-if ! command -v uv &> /dev/null; then
-    echo "uv not found. Installing uv..."
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    export PATH="$HOME/.local/bin:$PATH"
-else
-    echo "uv already installed."
+set -euo pipefail
+cd "$(dirname "$0")/.."
+if ! command -v uv >/dev/null 2>&1; then
+  echo "Install uv first: https://docs.astral.sh/uv/getting-started/installation/" >&2
+  exit 1
 fi
-
-echo "🔹 Creating .venv..."
-uv venv .venv
-
-echo "🔹 Activating virtual environment..."
-source .venv/bin/activate
-
-echo "🔹 Upgrading pip..."
-uv pip install --upgrade pip
-
-echo "🔹 Installing PyTorch (CUDA 12.1 example)..."
-uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-
-echo "🔹 Installing vLLM and Transformers..."
-uv pip install vllm transformers accelerate pandas
-
-echo "🔹 Running model downloader for the default local model set..."
-python model_downloader.py
-
-echo "🔹 Setup complete!"
+uv venv --python "${PYTHON_VERSION:-3.12}" .venv-serving
+uv pip install --python .venv-serving/bin/python -r requirements-serving.txt
+echo "Serving environment ready: source .venv-serving/bin/activate"
+echo "Download a model explicitly: python model_downloader.py --target qwen3"

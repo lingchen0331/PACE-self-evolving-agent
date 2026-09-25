@@ -1,0 +1,30 @@
+# Credentials and machine-specific settings
+.env
+.env.*
+!.env.example
+*.env
+configs/*.local.yaml
+
+# Python and tooling
+.venv/
+.venv-serving/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+.DS_Store
+
+# Downloaded models, caches, and generated experiment artifacts
+local_*_model/
+.cache/
+logs/
+results/
+dumped_agent/
+/mmlu_[0-9]*/
+/mgsm_[0-9]*/
+/ifeval_[0-9]*/
+pace_paper.zip

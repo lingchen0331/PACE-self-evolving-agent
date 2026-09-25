@@ -2,9 +2,6 @@ import argparse
 import functools
 from pathlib import Path
 
-from agent_module import Agent
-from agent_module import action_evaluate_on_task
-from agent_module import solver
 from run_config import apply_run_config_to_env, load_run_config
 
 
@@ -12,10 +9,10 @@ def print_config_header(config_path: str) -> None:
     resolved_path = Path(config_path).expanduser().resolve()
     print("========== Run Config: ==========")
     print(f"path={resolved_path}")
-    try:
-        print(resolved_path.read_text(encoding="utf-8").rstrip())
-    except FileNotFoundError:
-        print(f"(config file not found: {resolved_path})")
+    from run_config import redacted_config
+    import json
+
+    print(json.dumps(redacted_config(load_run_config(config_path)), indent=2))
     print()
 
 if __name__ == "__main__":
@@ -27,7 +24,9 @@ if __name__ == "__main__":
     cfg = load_run_config(args.config)
     apply_run_config_to_env(cfg)
 
-    key_path = cfg["key_path"]
+    from agent_module import Agent, action_evaluate_on_task, solver
+
+    key_path = cfg.get("key_path")
     goal_prompt_path = cfg["goal_prompt_path"]
     task_name = cfg["task"]
     runs = int(cfg.get("runs", 1))

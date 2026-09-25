@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use PACE, please cite the paper below."
+type: software
+title: "PACE: Two-Timescale Self-Evolution for Small Language Model Agents"
+authors:
+  - family-names: Ling
+    given-names: Chen
+  - family-names: Chen
+    given-names: Pei
+  - family-names: Guan
+    given-names: Albert
+  - family-names: Qu
+    given-names: Jiaming
+  - family-names: Akbar
+    given-names: Shayan Ali
+  - family-names: Gopinathan
+    given-names: Madhu
+  - family-names: Cornejo
+    given-names: Erwin
+repository-code: "https://github.com/lingchen0331/PACE-self-evolving-agent"
+license: MIT
+preferred-citation:
+  type: article
+  title: "PACE: Two-Timescale Self-Evolution for Small Language Model Agents"
+  authors:
+    - family-names: Ling
+      given-names: Chen
+    - family-names: Chen
+      given-names: Pei
+    - family-names: Guan
+      given-names: Albert
+    - family-names: Qu
+      given-names: Jiaming
+    - family-names: Akbar
+      given-names: Shayan Ali
+    - family-names: Gopinathan
+      given-names: Madhu
+    - family-names: Cornejo
+      given-names: Erwin
+  year: 2026
+  journal: arXiv
+  doi: "10.48550/arXiv.2605.23019"
+  url: "https://arxiv.org/abs/2605.23019"

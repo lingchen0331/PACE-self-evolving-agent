@@ -6,9 +6,9 @@ set -euo pipefail
 #        MODEL=qwen3-4b-2507 ./serve_llm.sh
 #        MODEL=ministral-14b ./serve_llm.sh
 MODEL="${MODEL:-qwen3}"
-HOST="${SERVE_HOST:-0.0.0.0}"
+HOST="${SERVE_HOST:-127.0.0.1}"
 PORT="${SERVE_PORT:-${PORT:-8000}}"
-MAX_MODEL_LEN="${MAX_MODEL_LEN:-131072}"
+MAX_MODEL_LEN="${MAX_MODEL_LEN:-32768}"
 
 if [[ "$MODEL" == "ministral-14b" ]]; then
   MODEL_PATH="${MODEL_PATH:-$(dirname "$0")/../local_ministral_model}"
@@ -24,16 +24,14 @@ elif [[ "$MODEL" == "qwen3.5" ]]; then
   CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
   TP_SIZE="${TP_SIZE:-1}"
   GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.90}"
-elif [[ "$MODEL" == "qwen3-4b-2507" ]]; then
+elif [[ "$MODEL" == "qwen3-4b-2507" || "$MODEL" == "qwen3" ]]; then
   MODEL_PATH="${MODEL_PATH:-$(dirname "$0")/../local_qwen3_model}"
   SERVED_MODEL_NAME="${SERVED_MODEL_NAME:-qwen3-local}"
   TOOL_CALL_PARSER="hermes"
   GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.90}"
 else
-  MODEL_PATH="${MODEL_PATH:-$(dirname "$0")/../local_qwen3_model}"
-  SERVED_MODEL_NAME="${SERVED_MODEL_NAME:-qwen3-local}"
-  TOOL_CALL_PARSER="qwen3_coder"
-  GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.90}"
+  echo "Unknown MODEL: $MODEL (choose qwen3, qwen3-4b-2507, qwen3.5, ministral-14b)" >&2
+  exit 2
 fi
 
 echo "Serving model: $MODEL (path=$MODEL_PATH, parser=$TOOL_CALL_PARSER)"

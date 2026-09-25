@@ -1,10 +1,14 @@
-## This repository currently contains the following domains
+# Benchmark data
 
-Datasets are downloaded from the referenced links.
+The files below were already present in the original repository. The retained snapshots are unchanged. `manifest.json` records SHA-256 hashes and file sizes so future runs can identify these exact snapshots. Original download revisions and preprocessing scripts were not included.
 
-**MGSM**: Freda Shi, Mirac Suzgun, Markus Freitag, Xuezhi Wang, Suraj Srivats, Soroush Vosoughi, Hyung Won Chung, Yi Tay, Sebastian Ruder, Denny Zhou, Dipanjan Das, and Jason Wei. [Language models are multilingual chain-of-thought reasoners.](https://arxiv.org/abs/2210.03057) In The Eleventh International Conference on Learning Representations, 2023. https://huggingface.co/datasets/juletxara/mgsm
+| Benchmark | Local files | Source |
+| --- | --- | --- |
+| MMLU | `mmlu.csv` | [cais/mmlu](https://huggingface.co/datasets/cais/mmlu) |
+| MGSM | `mgsm/mgsm_*.tsv` (11 languages) | [juletxara/mgsm](https://huggingface.co/datasets/juletxara/mgsm) |
+| IFEval | `ifeval/ifeval_input_data_{train,test}.jsonl` | [Google Research IFEval](https://github.com/google-research/google-research/tree/master/instruction_following_eval) |
+| GPQA | `gpqa_diamond.csv` (legacy, not registered) | [Idavidrein/gpqa](https://huggingface.co/datasets/Idavidrein/gpqa) |
 
-**DROP**:Dheeru Dua, Yizhong Wang, Pradeep Dasigi, Gabriel Stanovsky, Sameer Singh, and Matt Gardner. [DROP: A reading comprehension benchmark requiring discrete reasoning over paragraphs.](https://aclanthology.org/N19-1246/) Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, 2019. https://huggingface.co/datasets/ucinlp/drop
-**DPQA**: David Rein, Betty Li Hou, Asa Cooper Stickland, Jackson Petty, Richard Yuanzhe Pang, Julien Dirani, Julian Michael, and Samuel R. Bowman. [Gpqa: A graduate-level google-proof q&a benchmark](https://arxiv.org/abs/2311.12022), 2023.  https://huggingface.co/datasets/Idavidrein/gpqa/tree/main
+Dataset contents retain upstream terms; the repository's MIT license does not relicense benchmark data. Consult the upstream source for access conditions and attribution. The links identify benchmark sources, not verified provenance for every local split or transformation.
 
-**MMLU**: Dan Hendrycks, Collin Burns, Steven Basart, Andy Zou, Mantas Mazeika, Dawn Song, and Jacob Steinhardt. [Measuring massive multitask language understanding.](https://arxiv.org/abs/2009.03300v3) In International Conference on Learning Representations, 2021. https://huggingface.co/datasets/cais/mmlu
+See [reproducibility notes](../docs/reproducibility.md) for the actual sampling rules and IFEval scoring limitations.
