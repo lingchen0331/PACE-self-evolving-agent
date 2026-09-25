@@ -130,7 +130,3 @@ These checks validate code paths and setup behavior; they do not establish bench
   url={https://arxiv.org/abs/2605.23019}
 }
 ```
-
-## License and acknowledgments
-
-Project code is distributed under the [MIT License](LICENSE). Benchmark datasets and model checkpoints retain their respective upstream terms. Task evaluation code was adapted from [ADAS](https://github.com/ShengranHu/ADAS), as acknowledged in the original repository. See [dataset provenance](datasets/readme.md) for benchmark sources.
